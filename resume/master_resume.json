@@ -1,0 +1,146 @@
+{
+  "$schema": "https://raw.githubusercontent.com/reactive-resume/schema/main/schema/resume.json",
+  "basics": {
+    "name": "Mahansh Gaur",
+    "headline": "AI & Automation Engineer | Full-Stack Developer",
+    "email": "mahanshgaur@gmail.com",
+    "phone": "+91 70733 20270",
+    "location": {
+      "city": "Jaipur",
+      "region": "Rajasthan",
+      "country": "India"
+    },
+    "url": {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/mahansh-gaur-4306751b3/"
+    },
+    "customFields": [
+      {
+        "id": "github",
+        "icon": "github",
+        "name": "GitHub",
+        "value": "https://github.com/mahanshstarktech"
+      }
+    ]
+  },
+  "sections": {
+    "summary": {
+      "name": "Summary",
+      "columns": 1,
+      "visible": true,
+      "content": "Computer Science (IoT) engineer and 3x national hackathon winner (incl. Smart India Hackathon 2025) specializing in Python backend engineering, AI/LLM pipelines, test automation, and embedded systems. Experienced in building production REST APIs (FastAPI, Node.js, Django), multi-agent LLM workflows with rigorous output evaluation, and robotic computer vision."
+    },
+    "experience": {
+      "name": "Experience",
+      "columns": 1,
+      "visible": true,
+      "items": [
+        {
+          "id": "automatic-lly",
+          "visible": true,
+          "company": "Automatic.lly",
+          "position": "AI & Automation Engineer Intern",
+          "location": "Jaipur, Rajasthan",
+          "date": "Jun 2025 – Present",
+          "summary": "Engineered production AI product-listing pipeline; scraped vendor URLs into MongoDB, structured outputs via Gemini 3.6 Flash Lite API for SEO metadata and HSN codes published to Zoho Commerce.\nDesigned FastAPI endpoints with Celery-backed async AI task execution, automated category suggestions, SKU deduplication, rate-limit resilience, and production MongoDB/Redis pooling.\nBuilt autonomous pick-and-place system on MechArm Pi 270 (6-DOF arm) performing 360° scanning and OpenCV HSV color segmentation.\nOptimized real-time OpenCV pipeline on Raspberry Pi 4B (2 GB RAM) at 10 FPS, reducing memory footprint by 75% via frame-skipping.\nImplemented 30-iteration proportional visual servoing loop correcting yaw (Joint 1) and pitch (Joint 2) from pixel error."
+        },
+        {
+          "id": "auratech",
+          "visible": true,
+          "company": "AuraTech.",
+          "position": "Web Development Intern",
+          "location": "Jaipur, Rajasthan",
+          "date": "Jan 2025 – Apr 2025",
+          "summary": "Delivered Django backend routes, CRUD workflows, and real-time IoT sensor dashboards (DHT11, soil moisture, ultrasonic) integrated with live web interfaces; maintained codebase via Git pull-request review workflows."
+        },
+        {
+          "id": "skit-coe",
+          "visible": true,
+          "company": "IoT Centre of Excellence, SKIT",
+          "position": "IoT & Machine Learning Intern",
+          "location": "Jaipur, Rajasthan",
+          "date": "Dec 2023 – Jan 2024",
+          "summary": "Architected end-to-end sensor data management pipeline for precision agriculture; calibrated 5 industrial IoT sensor types and engineered real-time telemetry ingestion pipelines into centralized storage."
+        }
+      ]
+    },
+    "projects": {
+      "name": "Projects",
+      "columns": 1,
+      "visible": true,
+      "items": [
+        {
+          "id": "amitastro",
+          "visible": true,
+          "name": "AmitAstro: Full-Stack Consultation Platform",
+          "description": "Solo-built client platform with React 19, Vite, TypeScript, Node.js/Express, PostgreSQL, SQLite, Socket.io, Gemini API, and PWA (30,000+ lines). Includes UPI/UTR verification queue, Telegram webhook alerts, fraud prevention, timezone-aware booking engine, and RSA-OAEP encryption.",
+          "date": "2024 – 2025"
+        },
+        {
+          "id": "amitastro-tests",
+          "visible": true,
+          "name": "AmitAstro Test Automation & AI-Output Evaluation Framework",
+          "description": "Built 170+ automated tests across unit, database, REST API, real-time, and UI layers using Vitest, Supertest, and Playwright. Cross-database validation across SQLite and PostgreSQL via GitHub Actions CI service containers.",
+          "date": "2025"
+        },
+        {
+          "id": "arma",
+          "visible": true,
+          "name": "ARMA: Smart Farming IoT Pipeline & Analytics Dashboard",
+          "description": "5-stage Python ETL pipeline ingesting 4,300+ records into PostgreSQL star schema; cut query latency by 65%. 10 advanced SQL queries modelling 31% water savings. Fruit ripeness detection via OpenCV + YOLOv8.",
+          "date": "2024"
+        },
+        {
+          "id": "sih-grid",
+          "visible": true,
+          "name": "Renewable Energy Grid Optimizer (SIH 2025 Winner)",
+          "description": "Smart India Hackathon 2025 winning system: Real-time grid monitoring and automated phase-balancing algorithm on renewable distribution feeders using ESP32, PZEM-004T, LoRa, and Python dashboard.",
+          "date": "2025"
+        }
+      ]
+    },
+    "skills": {
+      "name": "Skills",
+      "columns": 1,
+      "visible": true,
+      "items": [
+        {
+          "id": "languages",
+          "name": "Languages",
+          "description": "Python, TypeScript, JavaScript, SQL (PostgreSQL, SQLite), C/C++, HTML/CSS"
+        },
+        {
+          "id": "backend",
+          "name": "Backend & Cloud",
+          "description": "FastAPI, Node.js / Express, Django, REST API Design, Celery, Redis, Docker, WebSockets"
+        },
+        {
+          "id": "ai-cv",
+          "name": "AI / ML & Computer Vision",
+          "description": "Gemini API, OpenAI API, Structured JSON, OpenCV, YOLOv8, HSV Color Segmentation, Visual Servoing"
+        },
+        {
+          "id": "testing",
+          "name": "Testing & CI/CD",
+          "description": "Vitest, Supertest, Playwright (E2E), GitHub Actions CI/CD Matrices, React Testing Library"
+        }
+      ]
+    },
+    "education": {
+      "name": "Education",
+      "columns": 1,
+      "visible": true,
+      "items": [
+        {
+          "id": "skit-btech",
+          "visible": true,
+          "institution": "Swami Keshvanand Institute of Technology (SKIT)",
+          "degree": "B.Tech in Computer Science and Engineering (IoT)",
+          "location": "Jaipur, Rajasthan",
+          "date": "2023 – 2027",
+          "summary": "Coursework: Data Structures & Algorithms, Operating Systems, Database Management Systems, Computer Networks, Object-Oriented Programming, IoT Systems."
+        }
+      ]
+    }
+  }
+}

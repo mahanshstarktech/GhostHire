@@ -19,7 +19,12 @@ from bot.db import (
 )
 from bot.scrapers import get_all_new_jobs
 from bot.matcher import score_job
-from bot.resume_generator import generate_tailored_resume, generate_cover_letter
+from bot.resume_generator import (
+    generate_tailored_resume,
+    generate_cover_letter_pdf,
+    generate_cover_letter
+)
+from bot.ats_validator import score_ats_pdf
 from bot.recruiter_finder import find_hiring_team
 from bot.mailer import send_application_email
 from bot.inbox_monitor import check_inbox_for_replies
@@ -57,11 +62,7 @@ def run_job_cycle():
         print(f"\n  🎯 High match: {company} — {title} (Score: {score}%)")
         print(f"     Matched: {', '.join(matched_kw)}")
         
-        # 1. Compile bespoke LuaLaTeX resume with company-specific filename
-        print(f"     [+] Compiling tailored LaTeX resume...")
-        pdf_path = generate_tailored_resume(j_id, company, title, matched_kw)
-        
-        # 2. Deep Recruiter Intelligence & SMTP Handshake Verification
+        # 1. Investigate real recruiters & verified email for the company first
         print(f"     [+] Investigating real recruiters & verified email for {company}...")
         intel = find_hiring_team(company, url)
         
@@ -77,32 +78,52 @@ def run_job_cycle():
         else:
             print(f"     [ℹ️] No direct verified individual mailbox. Safe Mode: skipping blind email to protect sender score.")
 
-        # 3. Generate cover letter personalized directly to the recruiter
-        cover_letter = generate_cover_letter(company, title, matched_kw, recruiter_name=recruiter_name)
+        # 2. Compile bespoke LuaLaTeX resume and companion cover letter PDF
+        print(f"     [+] Compiling tailored LaTeX resume & cover letter PDFs...")
+        pdf_path = generate_tailored_resume(j_id, company, title, matched_kw)
+        cover_pdf_path = generate_cover_letter_pdf(
+            j_id, company, title, matched_kw,
+            recruiter_name=recruiter_name,
+            recruiter_headline=recruiter_headline,
+            location=job.get("location")
+        )
+
+        # 3. Validate ATS Compliance via Reactive Resume Rule Engine
+        ats_eval = score_ats_pdf(pdf_path, matched_kw)
+        print(f"     [📊] ATS Score: {ats_eval.get('score')}/100 (Compliant: {ats_eval.get('is_ats_compliant')})")
+
+        # 4. Generate cover letter personalized directly to the recruiter
+        cover_letter_text = generate_cover_letter(company, title, matched_kw, recruiter_name=recruiter_name)
         
-        # 4. Safe cold outreach ONLY to verified real email addresses (Zero generic careers@)
+        # 5. Safe cold outreach ONLY to verified real email addresses (Zero generic careers@)
         email_sent = False
         if verified_email:
             subject = f"Application: {title} — Mahansh Gaur"
-            success, msg = send_application_email(verified_email, subject, cover_letter, pdf_path)
+            success, msg = send_application_email(
+                verified_email,
+                subject,
+                cover_letter_text,
+                resume_pdf_path=pdf_path,
+                cover_letter_pdf_path=cover_pdf_path
+            )
             if success:
                 email_sent = True
                 print(f"     [+] Delivered cold email directly to {recruiter_name} ({verified_email})")
             else:
                 print(f"     [!] Outreach notice: {msg}")
                 
-        # 5. Record in local database
+        # 6. Record in local database
         save_application(
             job_id=j_id,
             resume_pdf_path=pdf_path,
-            cover_letter=cover_letter,
+            cover_letter=cover_letter_text,
             hr_email=verified_email if email_sent else None,
             email_status="sent" if email_sent else "skipped"
         )
         update_job_status(j_id, "applied" if email_sent else "notified")
         
-        # 6. Send Rich Telegram Card with Recruiter intel, Connection Note & PDF attachment
-        print(f"     [+] Delivering Telegram intelligence card...")
+        # 7. Send Rich Telegram Card with Recruiter intel, Connection Note & DUAL PDF attachments
+        print(f"     [+] Delivering Telegram intelligence card with dual PDFs...")
         notify_job_found(
             job=job,
             match_score=score,
@@ -111,7 +132,8 @@ def run_job_cycle():
             recruiter_name=recruiter_name,
             recruiter_headline=recruiter_headline,
             recruiter_profile=recruiter_profile,
-            pdf_path=pdf_path
+            pdf_path=pdf_path,
+            cover_letter_pdf=cover_pdf_path
         )
         
         if email_sent:

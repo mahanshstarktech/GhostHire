@@ -69,9 +69,10 @@ def notify_job_found(
     recruiter_name: str = None,
     recruiter_headline: str = None,
     recruiter_profile: str = None,
-    pdf_path: Path = None
+    pdf_path: Path = None,
+    cover_letter_pdf: Path = None
 ):
-    """Format and send an advanced job notification card with 1-click apply link and recruiter intel."""
+    """Format and send an advanced job notification card with 1-click apply link, recruiter intel, and dual PDFs."""
     company = html.escape(job.get("company", "Unknown Company"))
     title = html.escape(job.get("title", "Software Engineer"))
     location = html.escape(job.get("location", "Location Not Specified"))
@@ -94,7 +95,7 @@ def notify_job_found(
             msg += f"🔗 <b>LinkedIn Profile:</b> <a href=\"{recruiter_profile}\">View Recruiter</a>\n"
 
     if email_sent and hr_email:
-        msg += f"📬 <b>Status:</b> ✅ Cold Outreach Sent to <code>{html.escape(hr_email)}</code>\n"
+        msg += f"📬 <b>Status:</b> ✅ Outreach Delivered to <code>{html.escape(hr_email)}</code>\n"
     else:
         msg += f"📬 <b>Status:</b> ℹ️ Direct Portal Application Ready (Zero Bounces)\n"
 
@@ -111,13 +112,15 @@ def notify_job_found(
 
     msg += (
         f"\n🚀 <b><a href=\"{apply_url}\">👉 TAP HERE TO APPLY INSTANTLY</a></b>\n"
-        f"\n<i>Tailored resume PDF generated &amp; attached below.</i>"
+        f"\n<i>Tailored resume &amp; cover letter PDFs attached below.</i>"
     )
 
     send_message(msg)
     
     if pdf_path and Path(pdf_path).exists():
-        send_document(Path(pdf_path), caption=f"📄 Tailored Resume for {company}")
+        send_document(Path(pdf_path), caption=f"📄 Tailored Resume ({company})")
+    if cover_letter_pdf and Path(cover_letter_pdf).exists():
+        send_document(Path(cover_letter_pdf), caption=f"✉️ Matching Cover Letter ({company})")
 
 def notify_inbox_reply(sender: str, subject: str, snippet: str, classification: str):
     """Send high priority alert when HR replies."""

@@ -22,10 +22,11 @@ def send_application_email(
     to_email: str,
     subject: str,
     body_text: str,
-    resume_pdf_path: Path = None
+    resume_pdf_path: Path = None,
+    cover_letter_pdf_path: Path = None
 ) -> tuple[bool, str]:
     """
-    Safely sends cold outreach email via Gmail SMTP with tailored resume PDF attachment.
+    Safely sends cold outreach email via Gmail SMTP with tailored resume and cover letter PDF attachments.
     Enforces strict rate limits, domain cooldowns, and MX verification.
     """
     if not GMAIL_USER or not GMAIL_APP_PASS:
@@ -55,12 +56,15 @@ def send_application_email(
 
     msg.attach(MIMEText(body_text, "plain", "utf-8"))
 
-    if resume_pdf_path and Path(resume_pdf_path).exists():
-        with open(resume_pdf_path, "rb") as f:
-            pdf_data = f.read()
-            part = MIMEApplication(pdf_data, _subtype="pdf")
-            part.add_header("Content-Disposition", "attachment", filename=Path(resume_pdf_path).name)
-            msg.attach(part)
+    # Attachments: Resume and Cover Letter PDFs
+    attachments = [resume_pdf_path, cover_letter_pdf_path]
+    for att in attachments:
+        if att and Path(att).exists():
+            with open(att, "rb") as f:
+                pdf_data = f.read()
+                part = MIMEApplication(pdf_data, _subtype="pdf")
+                part.add_header("Content-Disposition", "attachment", filename=Path(att).name)
+                msg.attach(part)
 
     try:
         server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20)
