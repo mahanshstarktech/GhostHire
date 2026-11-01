@@ -26,17 +26,11 @@ def make_pdf_filename(company: str, job_title: str) -> str:
     return f"{candidate_prefix}_Resume_{co}.pdf"
 
 def generate_tailored_resume(job_id: str, company: str, job_title: str, matched_keywords: list[str]) -> Path:
-    """
-    Creates a tailored LaTeX resume targeted for the specific company and role,
-    compiles it using LuaLaTeX, and returns the Path to the generated PDF
-    with a company-specific filename.
-    """
     out_dir = APPS_DIR / f"{clean_name(company)}_{clean_name(job_id)}"
     out_dir.mkdir(parents=True, exist_ok=True)
     
     tex_content = MASTER_TEX.read_text(encoding="utf-8")
     
-    # Tailor the target title
     tailored_title = job_title.replace("&", r"\&")
     tex_content = re.sub(
         r"\\title\{[^}]*\}",
@@ -62,7 +56,6 @@ def generate_tailored_resume(job_id: str, company: str, job_title: str, matched_
                 final_pdf.unlink()
             compiled_pdf.rename(final_pdf)
         
-        # Clean auxiliary files
         for ext in [".aux", ".log", ".out"]:
             f = out_dir / f"resume{ext}"
             if f.exists():
@@ -76,15 +69,22 @@ def generate_tailored_resume(job_id: str, company: str, job_title: str, matched_
         fallback_pdf = CV_DIR / "main.pdf"
         return fallback_pdf
 
-def generate_cover_letter(company: str, job_title: str, matched_keywords: list[str]) -> str:
+def generate_cover_letter(company: str, job_title: str, matched_keywords: list[str], recruiter_name: str = None) -> str:
     """
-    Generates a personalized, professional cold email / cover letter body.
+    Generates a personalized, professional cold email body.
+    If recruiter_name is provided, addresses them directly by first name!
     """
     kw_str = ", ".join(matched_keywords[:4]) if matched_keywords else "Python, FastAPI, and Full-Stack Development"
     
-    letter = f"""Hi {company} Hiring Team,
+    if recruiter_name and len(recruiter_name.split()) >= 1:
+        first_name = recruiter_name.split()[0].title()
+        greeting = f"Hi {first_name},"
+    else:
+        greeting = f"Hi {company} Hiring Team,"
 
-I came across your open role for {job_title} and wanted to reach out directly to express my strong interest.
+    letter = f"""{greeting}
+
+I came across your open role for {job_title} at {company} and wanted to reach out directly to express my strong interest.
 
 I am a final-year B.Tech student in Computer Science & Engineering (IoT) graduating in 2027, winner of the Smart India Hackathon (SIH) 2025, with ~2 years of hands-on software development experience across production systems.
 

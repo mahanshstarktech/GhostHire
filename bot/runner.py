@@ -14,18 +14,19 @@ from bot.db import (
     save_job,
     update_job_status,
     save_application,
+    is_job_seen,
     get_emails_sent_today_count
 )
 from bot.scrapers import get_all_new_jobs
 from bot.matcher import score_job
 from bot.resume_generator import generate_tailored_resume, generate_cover_letter
-from bot.hr_finder import get_target_hr_emails
+from bot.recruiter_finder import find_hiring_team
 from bot.mailer import send_application_email
 from bot.inbox_monitor import check_inbox_for_replies
 from bot.telegram_notifier import notify_job_found, send_message
 
 def run_job_cycle():
-    """Runs a single pass of job searching, tailoring, emailing, and notifying."""
+    """Runs a single pass of job searching, tailoring, outreach, and notifying."""
     print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 🔍 Starting GhostHire discovery cycle...")
     
     new_jobs = get_all_new_jobs()
@@ -40,6 +41,10 @@ def run_job_cycle():
         url = job["url"]
         j_id = job["id"]
         
+        # Check fuzzy company + title deduplication
+        if is_job_seen(j_id, company=company, title=title) or is_job_seen(url, company=company, title=title):
+            continue
+
         score, matched_kw = score_job(title, job.get("description", ""))
         save_job(j_id, title, company, job["location"], url, job["source"], score)
         processed_count += 1
@@ -52,55 +57,69 @@ def run_job_cycle():
         print(f"\n  🎯 High match: {company} — {title} (Score: {score}%)")
         print(f"     Matched: {', '.join(matched_kw)}")
         
-        # Tailor LaTeX resume and compile PDF
+        # 1. Compile bespoke LuaLaTeX resume with company-specific filename
         print(f"     [+] Compiling tailored LaTeX resume...")
         pdf_path = generate_tailored_resume(j_id, company, title, matched_kw)
         
-        # Generate clean cover letter
-        cover_letter = generate_cover_letter(company, title, matched_kw)
+        # 2. Deep Recruiter Intelligence & SMTP Handshake Verification
+        print(f"     [+] Investigating real recruiters & verified email for {company}...")
+        intel = find_hiring_team(company, url)
         
-        # Discover and verify MX records for hiring team
-        hr_candidates = get_target_hr_emails(company, url)
-        target_hr = hr_candidates[0] if hr_candidates else None
+        recruiter_name = intel.get("recruiter_name")
+        recruiter_headline = intel.get("recruiter_headline")
+        recruiter_profile = intel.get("recruiter_profile")
+        verified_email = intel.get("verified_email")
         
-        # Safe cold outreach (only if domain has verified MX records)
+        if recruiter_name:
+            print(f"     [👤] Discovered Real Recruiter: {recruiter_name} ({recruiter_headline})")
+        if verified_email:
+            print(f"     [✉️] 100% Verified Active Mailbox: {verified_email}")
+        else:
+            print(f"     [ℹ️] No direct verified individual mailbox. Safe Mode: skipping blind email to protect sender score.")
+
+        # 3. Generate cover letter personalized directly to the recruiter
+        cover_letter = generate_cover_letter(company, title, matched_kw, recruiter_name=recruiter_name)
+        
+        # 4. Safe cold outreach ONLY to verified real email addresses (Zero generic careers@)
         email_sent = False
-        if target_hr:
+        if verified_email:
             subject = f"Application: {title} — Mahansh Gaur"
-            success, msg = send_application_email(target_hr, subject, cover_letter, pdf_path)
+            success, msg = send_application_email(verified_email, subject, cover_letter, pdf_path)
             if success:
                 email_sent = True
-                print(f"     [+] Cold email delivered to verified inbox: {target_hr}")
+                print(f"     [+] Delivered cold email directly to {recruiter_name} ({verified_email})")
             else:
                 print(f"     [!] Outreach notice: {msg}")
-        else:
-            print(f"     [i] No public MX-verified email for {company}. Ready for direct portal apply.")
                 
-        # Record application
+        # 5. Record in local database
         save_application(
             job_id=j_id,
             resume_pdf_path=pdf_path,
             cover_letter=cover_letter,
-            hr_email=target_hr if email_sent else None,
+            hr_email=verified_email if email_sent else None,
             email_status="sent" if email_sent else "skipped"
         )
         update_job_status(j_id, "applied" if email_sent else "notified")
         
-        # Send Telegram Card
-        print(f"     [+] Sending Telegram notification...")
+        # 6. Send Rich Telegram Card with Recruiter intel, Connection Note & PDF attachment
+        print(f"     [+] Delivering Telegram intelligence card...")
         notify_job_found(
             job=job,
             match_score=score,
             email_sent=email_sent,
-            hr_email=target_hr if email_sent else None,
+            hr_email=verified_email,
+            recruiter_name=recruiter_name,
+            recruiter_headline=recruiter_headline,
+            recruiter_profile=recruiter_profile,
             pdf_path=pdf_path
         )
         
-        time.sleep(MIN_DELAY_BETWEEN_EMAILS_SECONDS)
+        if email_sent:
+            time.sleep(MIN_DELAY_BETWEEN_EMAILS_SECONDS)
         
-        # Maximum 5 applications per cycle to stay well under rate limits
+        # Limit to 5 per cycle
         if matched_count >= 5:
-            print("[*] Reached cycle limit (5 high-match applications). Pausing.")
+            print("[*] Reached cycle limit (5 high-match opportunities). Pausing.")
             break
 
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ Discovery cycle finished. Scanned: {processed_count}, Matched: {matched_count}")
@@ -126,7 +145,7 @@ def main():
     import schedule
     
     print("🚀 GhostHire 24/7 Agent is running in daemon mode!")
-    send_message("👻 <b>GhostHire 24/7 Agent Online!</b>\nScanning job boards, tailoring resumes, and monitoring inbox.")
+    send_message("👻 <b>GhostHire Agent Upgraded & Active!</b>\nReal recruiter intelligence, zero-bounce verification, and 1-tap connection notes enabled.")
     
     run_inbox_cycle()
     run_job_cycle()

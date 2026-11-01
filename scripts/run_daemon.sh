@@ -15,3 +15,4 @@ nohup python3 -u bot/runner.py --daemon >> "$LOG_FILE" 2>&1 &
 echo $! > "$PID_FILE"
 echo "👻 GhostHire started in 24x7 background daemon mode (PID: $(cat "$PID_FILE"))."
 echo "Logs: tail -f $LOG_FILE"
+

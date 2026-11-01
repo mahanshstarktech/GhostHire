@@ -53,3 +53,4 @@ jobs:
           git config --global user.email "bot@ghosthire.internal"
           git add bot/ghosthire.db applications/ 2>/dev/null || true
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: persist GhostHire state & application logs [skip ci]" && git push)
+

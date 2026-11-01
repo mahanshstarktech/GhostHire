@@ -15,3 +15,4 @@ if [ -f "$PID_FILE" ]; then
 else
     echo "No running GhostHire instance found."
 fi
+

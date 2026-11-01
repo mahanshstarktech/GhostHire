@@ -91,3 +91,4 @@ def score_job(title: str, description: str = "") -> tuple[int, list[str]]:
         final_score = max(final_score, 70)
         
     return final_score, matched
+

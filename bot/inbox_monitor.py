@@ -50,15 +50,33 @@ def clean_header(val: str) -> str:
             out.append(str(part))
     return "".join(out)
 
-def classify_email(subject: str, body: str) -> str:
-    text = f"{subject.lower()} {body.lower()}"
+AUTO_REPLY_IGNORE = [
+    r"mailer-daemon",
+    r"delivery status notification",
+    r"unmonitored",
+    r"no.?reply",
+    r"address not found",
+    r"failure notice",
+    r"undeliverable",
+    r"postmaster",
+    r"automatic reply"
+]
+
+def classify_email(subject: str, body: str, sender: str = "") -> str:
+    text = f"{subject.lower()} {body.lower()} {sender.lower()}"
+    
+    # Check if automated bounce or unmonitored system reply
+    for pat in AUTO_REPLY_IGNORE:
+        if re.search(pat, text):
+            return "auto_reply_bounce"
+
     for pat in INTERVIEW_KEYWORDS:
         if re.search(pat, text):
             return "interview"
     for pat in REJECTION_KEYWORDS:
         if re.search(pat, text):
             return "rejection"
-    if any(k in text for k in ["application", "resume", "cv", "candidacy", "interview"]):
+    if any(k in text for k in ["interview", "shortlist", "assessment", "round"]):
         return "inquiry"
     return "other"
 
@@ -114,7 +132,7 @@ def check_inbox_for_replies():
                 except Exception:
                     pass
 
-            classification = classify_email(subject, body_text)
+            classification = classify_email(subject, body_text, sender)
             snippet = body_text.strip()[:300].replace("\n", " ")
             record_reply(message_id, sender, subject, snippet, classification)
 
@@ -128,3 +146,4 @@ def check_inbox_for_replies():
 
 if __name__ == "__main__":
     check_inbox_for_replies()
+

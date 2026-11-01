@@ -74,3 +74,4 @@ def send_application_email(
         err_msg = str(e)
         log_email_sent(to_email, domain, subject, status=f"failed: {err_msg}")
         return False, f"SMTP Error: {err_msg}"
+

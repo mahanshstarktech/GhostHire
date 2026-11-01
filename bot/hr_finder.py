@@ -119,3 +119,4 @@ def get_target_hr_emails(company_name: str, company_url: str = None) -> list[str
             verified_emails.append(f"{prefix}@{domain}")
 
     return verified_emails
+

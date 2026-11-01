@@ -90,13 +90,33 @@ def save_job(job_id, title, company, location, url, source, score=0):
     finally:
         conn.close()
 
-def is_job_seen(job_id_or_url):
+def is_job_seen(job_id_or_url, company: str = None, title: str = None):
     conn = get_connection()
     c = conn.cursor()
+    # Check exact ID or URL
     c.execute("SELECT id FROM jobs WHERE id = ? OR url = ?", (job_id_or_url, job_id_or_url))
     row = c.fetchone()
+    if row is not None:
+        conn.close()
+        return True
+
+    # Check fuzzy Company + Title match to prevent duplicate alerts for the same role
+    if company and title:
+        import re
+        clean_co = re.sub(r"[\s\-_].*", "", company).strip().lower()
+        clean_ti = re.sub(r"[\s\-_].*", "", title).strip().lower()
+        if len(clean_co) >= 3 and len(clean_ti) >= 3:
+            c.execute("""
+            SELECT id FROM jobs 
+            WHERE LOWER(company) LIKE ? AND LOWER(title) LIKE ?
+            """, (f"%{clean_co}%", f"%{clean_ti}%"))
+            match = c.fetchone()
+            if match is not None:
+                conn.close()
+                return True
+
     conn.close()
-    return row is not None
+    return False
 
 def get_emails_sent_today_count():
     conn = get_connection()
@@ -175,3 +195,4 @@ def record_reply(message_id, sender, subject, snippet, classification):
 if __name__ == "__main__":
     init_db()
     print("GhostHire Database initialized at", DB_PATH)
+

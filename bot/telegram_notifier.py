@@ -61,10 +61,17 @@ def send_document(file_path: Path, caption: str = ""):
         print(f"[Telegram Error] send_document failed: {e}")
         return False
 
-def notify_job_found(job: dict, match_score: int, email_sent: bool, hr_email: str = None, pdf_path: Path = None):
-    """Format and send a job notification card with 1-click apply link."""
-    status_text = "✅ <b>Cold Outreach Sent to Hiring Team</b>" if email_sent else "ℹ️ <b>Direct Portal Application Ready</b>"
-    
+def notify_job_found(
+    job: dict,
+    match_score: int,
+    email_sent: bool,
+    hr_email: str = None,
+    recruiter_name: str = None,
+    recruiter_headline: str = None,
+    recruiter_profile: str = None,
+    pdf_path: Path = None
+):
+    """Format and send an advanced job notification card with 1-click apply link and recruiter intel."""
     company = html.escape(job.get("company", "Unknown Company"))
     title = html.escape(job.get("title", "Software Engineer"))
     location = html.escape(job.get("location", "Location Not Specified"))
@@ -76,12 +83,32 @@ def notify_job_found(job: dict, match_score: int, email_sent: bool, hr_email: st
         f"🏢 <b>Company:</b> {company}\n"
         f"💼 <b>Role:</b> {title}\n"
         f"📍 <b>Location:</b> {location}\n"
-        f"📊 <b>ATS Match:</b> {match_score}/100\n"
-        f"📬 <b>Status:</b> {status_text}\n"
+        f"📊 <b>ATS Fit:</b> {match_score}/100\n"
     )
-    if hr_email:
-        msg += f"👤 <b>Contacted:</b> <code>{html.escape(hr_email)}</code>\n"
-        
+
+    if recruiter_name:
+        msg += f"👤 <b>Recruiter:</b> {html.escape(recruiter_name)}\n"
+        if recruiter_headline and recruiter_headline != "Hiring Team":
+            msg += f"🏷️ <b>Title:</b> <i>{html.escape(recruiter_headline)}</i>\n"
+        if recruiter_profile:
+            msg += f"🔗 <b>LinkedIn Profile:</b> <a href=\"{recruiter_profile}\">View Recruiter</a>\n"
+
+    if email_sent and hr_email:
+        msg += f"📬 <b>Status:</b> ✅ Cold Outreach Sent to <code>{html.escape(hr_email)}</code>\n"
+    else:
+        msg += f"📬 <b>Status:</b> ℹ️ Direct Portal Application Ready (Zero Bounces)\n"
+
+    # Generate tailored 300-char LinkedIn connection note if recruiter is known
+    if recruiter_name:
+        first_name = recruiter_name.split()[0].title()
+        co_short = company.split()[0]
+        note = (
+            f"Hi {first_name}, I saw you're hiring for {title} at {co_short}. "
+            f"As a final-year B.Tech CSE IoT student, SIH winner, and 2-yr Python/FastAPI engineer, "
+            f"I'd love to connect and share my portfolio!"
+        )
+        msg += f"\n💬 <b>Recruiter Connection Note (Copy-Paste):</b>\n<code>{html.escape(note)}</code>\n"
+
     msg += (
         f"\n🚀 <b><a href=\"{apply_url}\">👉 TAP HERE TO APPLY INSTANTLY</a></b>\n"
         f"\n<i>Tailored resume PDF generated &amp; attached below.</i>"

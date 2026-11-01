@@ -91,3 +91,4 @@ def get_all_new_jobs() -> list[dict]:
     all_jobs.extend(scrape_linkedin_jobs())
     all_jobs.extend(scrape_freehire_jobs())
     return all_jobs
+
