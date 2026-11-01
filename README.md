@@ -104,10 +104,11 @@ flowchart TB
 
 GhostHire incorporates the design language, data schema, and ATS scoring principles of [**Reactive Resume**](https://github.com/reactive-resume/reactive-resume):
 
-### 1. Master JSON Resume Schema (`resume/master_resume.json`)
-GhostHire maintains your complete candidate profile in the universal JSON Resume / Reactive Resume schema:
-- Easily export to or import from any self-hosted or cloud instance of Reactive Resume.
-- Structured separation of `basics`, `work`, `education`, `skills`, `projects`, and `customFields`.
+### 1. Master JSON Schemas (`resume/`)
+GhostHire maintains your complete candidate profile in universal Reactive Resume schemas:
+- **`resume/master_resume.json`:** Universal JSON Resume schema containing `basics`, `experience`, `projects`, `skills`, and `education`.
+- **`resume/master_cover_letter.json`:** Official Reactive Resume Cover Letter schema (`format: reactive-resume-cover-letter`, version 1) containing structured recipient details, personalized salutations, aligned technical highlights, and styled metadata.
+- **Application Bundle Export:** For every discovered role, GhostHire exports both `resume.json` and `cover_letter.json` right alongside the compiled PDFs in `applications/<Company>_<JobID>/` for 1-click import into any Reactive Resume instance.
 
 ### 2. 5-Pillar ATS Validator (`bot/ats_validator.py`)
 Ported from Reactive Resume's `ats-pdf` rule engine, every compiled PDF is verified against strict parsing standards:
@@ -131,18 +132,20 @@ Ported from Reactive Resume's `ats-pdf` rule engine, every compiled PDF is verif
 
 ---
 
-## 📄 Synchronized Dual PDF Generation
+## 📄 Synchronized Dual Document Engine (Resume + Cover Letter)
 
-For every matched opportunity, GhostHire generates **two paired documents** with shared executive typography:
+For every matched opportunity, GhostHire generates **paired documents** with shared executive typography, branding colors (`color1 = #2b547e`), and margins:
 
-1. **Tailored Resume PDF (`Mahansh_Gaur_Resume_<Company>.pdf`):**
-   - Injects role-specific title, highlighted tech stack, and targeted project ordering.
-   - Built with LuaLaTeX using the clean Banking ModernCV template.
-2. **Matching Cover Letter PDF (`Mahansh_Gaur_Cover_Letter_<Company>.pdf`):**
-   - Includes recipient name, title, company address, and formatted date.
-   - Tailored salutation addressing the recruiter directly (*"Dear Sanika,"*).
-   - Structured 4-paragraph body detailing relevant production achievements.
-   - Both documents are attached to cold outreach emails and delivered to Telegram.
+1. **Master LaTeX Source Templates (`cv/`):**
+   - **`cv/main.tex`:** ModernCV Banking style single-page resume with SIH 2025 win, Automatic.lly AI pipelines, robotics CV, and AmitAstro test suites.
+   - **`cv/cover_letter.tex`:** Paired ModernCV Banking style executive cover letter matching `main.tex` headers, fonts, and geometry scale (0.83).
+2. **Company-Tailored PDFs (`applications/<Company>_<JobID>/`):**
+   - **`Mahansh_Gaur_Resume_<Company>.pdf`:** Injects role-specific title, highlighted tech stack, and targeted project ordering.
+   - **`Mahansh_Gaur_Cover_Letter_<Company>.pdf`:** Includes recipient recruiter name, title, company address, formatted date, personalized salutation (*"Dear Sanika,"*), and bulleted achievement highlights.
+3. **Reactive Resume Compatible Data Bundles:**
+   - **`resume.json`:** Ready-to-import Reactive Resume JSON payload.
+   - **`cover_letter.json`:** Ready-to-import Reactive Resume Cover Letter JSON document.
+   - Both PDFs are attached to cold outreach emails and delivered in Telegram intelligence cards.
 
 ---
 

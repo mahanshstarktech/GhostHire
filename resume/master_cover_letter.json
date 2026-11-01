@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/reactive-resume/schema/main/schema/cover-letter.json",
+  "format": "reactive-resume-cover-letter",
+  "version": 1,
+  "name": "Mahansh Gaur - Executive Cover Letter",
+  "recipientName": "Engineering Hiring Team",
+  "recipientCompany": "Target Technology Organization",
+  "letterDate": "2026-11-01",
+  "greeting": "Dear Hiring Team,",
+  "content": "I am writing to express my strong enthusiasm for the Software Engineering / AI Systems Engineer role. As a final-year B.Tech student in Computer Science & Engineering (IoT) graduating in 2027 and winner of the Smart India Hackathon (SIH) 2025, I bring hands-on experience designing production-grade backend systems, automated ingestion pipelines, and rigorous test automation suites.\n\nThroughout my engineering work, I have focused on building measurable, high-availability software architectures:\n• AI Backend & Async Pipelines: Engineered an end-to-end product ingestion pipeline using FastAPI, Celery, Redis, and MongoDB with structured Gemini outputs, automated deduplication, and rate-limit resilience.\n• Computer Vision & Embedded Robotics: Designed an autonomous 6-DOF pick-and-place robotic arm system with OpenCV color segmentation and visual servoing, slashing memory footprint by 75% on Raspberry Pi 4B.\n• Testing & CI/CD Systems: Architected AmitAstro with 170+ automated tests across Vitest, Supertest, and Playwright, validating cross-database behavior (SQLite & PostgreSQL) via GitHub Actions CI service containers.\n\nMy core competencies in Python, FastAPI, TypeScript, PostgreSQL, and Distributed Systems directly align with your engineering objectives. I thrive in high-ownership engineering environments and look forward to contributing immediately to your team.\n\nThank you for your time and consideration. I welcome the opportunity to discuss my qualifications in an interview.",
+  "signOff": "Sincerely,\nMahansh Gaur\nJaipur, Rajasthan, India | +91 70733 20270\nLinkedIn: https://linkedin.com/in/mahansh-gaur-4306751b3/\nGitHub: https://github.com/mahanshstarktech",
+  "recipient": "Engineering Hiring Team\nTarget Technology Organization\nIndia",
+  "layout": "structured",
+  "style": {
+    "basics": {
+      "name": "Mahansh Gaur",
+      "headline": "AI & Automation Engineer | Full-Stack Developer",
+      "email": "mahanshgaur@gmail.com",
+      "phone": "+91 70733 20270",
+      "location": {
+        "city": "Jaipur",
+        "region": "Rajasthan",
+        "country": "India"
+      },
+      "url": {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/mahansh-gaur-4306751b3/"
+      },
+      "customFields": [
+        {
+          "id": "github",
+          "icon": "github",
+          "name": "GitHub",
+          "value": "https://github.com/mahanshstarktech"
+        }
+      ]
+    },
+    "picture": {
+      "url": "",
+      "size": 64,
+      "aspectRatio": 1,
+      "borderRadius": 0,
+      "effects": {
+        "hidden": true,
+        "border": false,
+        "grayscale": false
+      }
+    },
+    "metadata": {
+      "template": "banking",
+      "typography": {
+        "font": {
+          "family": "Latin Modern Sans",
+          "subset": "latin",
+          "variants": ["regular", "bold"],
+          "size": 11
+        },
+        "lineHeight": 1.3,
+        "hideIcons": false,
+        "underlineLinks": true
+      },
+      "page": {
+        "margin": 14,
+        "format": "a4",
+        "options": {
+          "breakLine": true,
+          "pageNumbers": false
+        }
+      },
+      "theme": {
+        "background": "#ffffff",
+        "text": "#000000",
+        "primary": "#2b547e"
+      }
+    },
+    "sectionId": "executive-cover-letter",
+    "itemId": "cover-letter-item-1"
+  }
+}

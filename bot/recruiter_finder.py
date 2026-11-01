@@ -74,22 +74,40 @@ def extract_recruiter_from_linkedin_job(job_id_or_url: str) -> dict | None:
             html = r.read().decode("utf-8", errors="ignore")
 
         # Check for recruiter card
-        if "message-the-recruiter" in html or "base-main-card" in html:
-            name_m = re.search(r'aria-label="Message ([^"]+)"', html)
-            if not name_m:
-                name_m = re.search(r'<h3[^>]*class="[^"]*base-main-card__title[^"]*"[^>]*>\s*([^<\n]+)', html)
+        name = None
+        headline = "Hiring Team"
+        profile_url = None
 
-            name = name_m.group(1).strip() if name_m else None
-            
+        name_m = re.search(r'aria-label="Message ([^"]+)"', html)
+        if name_m:
+            name = name_m.group(1).strip()
+        else:
+            # Look only inside hiring team container
+            m_sec = re.search(r'(?:message-the-recruiter|hiring-team)[\s\S]{1,1200}?<\/section>', html, flags=re.I)
+            if not m_sec:
+                m_sec = re.search(r'(?:message-the-recruiter|hiring-team)[\s\S]{1,1200}?<\/div>', html, flags=re.I)
+            if m_sec:
+                sec_text = m_sec.group(0)
+                n_m = re.search(r'<h3[^>]*class="[^"]*base-main-card__title[^"]*"[^>]*>\s*([^<\n]+)', sec_text)
+                if n_m:
+                    cand_name = n_m.group(1).strip()
+                    # Filter out job titles accidentally rendered in nearby carousels
+                    job_tokens = ["engineer", "developer", "intern", "architect", "analyst", "pipeline", "specialist"]
+                    if not any(t in cand_name.lower() for t in job_tokens):
+                        name = cand_name
+
+        if name:
             url_m = re.search(r'href="([^"]+linkedin\.com\/in\/[^"]+)"', html)
-            profile_url = url_m.group(1) if url_m else None
-            if profile_url and "session_redirect=" in profile_url:
-                profile_url = urllib.parse.unquote(profile_url.split("session_redirect=")[1].split("&")[0])
+            if url_m:
+                profile_url = url_m.group(1)
+                if "session_redirect=" in profile_url:
+                    profile_url = urllib.parse.unquote(profile_url.split("session_redirect=")[1].split("&")[0])
 
             headline_m = re.search(r'<h4[^>]*class="[^"]*base-main-card__subtitle[^"]*"[^>]*>\s*([\s\S]*?)<\/h4>', html)
-            headline = re.sub(r"<.*?>", "", headline_m.group(1)).strip() if headline_m else "Hiring Team"
+            if headline_m:
+                headline = re.sub(r"<.*?>", "", headline_m.group(1)).strip()
 
-            if name and "message" not in name.lower() and len(name.split()) >= 2:
+            if "message" not in name.lower() and len(name.split()) >= 2:
                 return {
                     "name": name,
                     "headline": headline,

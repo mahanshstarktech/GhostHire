@@ -1,0 +1,62 @@
+%% Master Cover Letter Template - Mahansh Gaur
+%% Paired with main.tex for 100% typography, layout, and visual identity match.
+%% Compile with: lualatex cover_letter.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+% Style adjustments
+\renewcommand*{\namefont}{\fontsize{26}{28}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\ifpdftex\usepackage[T1]{fontenc}\fi
+\usepackage[scale=0.83]{geometry}
+
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Mahansh Gaur - Cover Letter},
+    pdfpagemode=UseNone,
+}}
+
+% Personal data matching main.tex exactly
+\name{Mahansh}{Gaur}
+\address{Jaipur, Rajasthan, India (Open to Relocate / Remote)}{}{}
+\phone[mobile]{+91 70733 20270}
+\email{mahanshgaur@gmail.com}
+\extrainfo{\href{https://linkedin.com/in/mahansh-gaur-4306751b3/}{linkedin.com/in/mahansh-gaur} \,|\, \href{https://github.com/mahanshstarktech}{github.com/mahanshstarktech}}
+
+\begin{document}
+
+\recipient{Engineering Hiring Team}{Target Engineering Team}
+\date{\today}
+\opening{Dear Hiring Team,}
+\closing{Sincerely,}
+\enclosure[Attached]{Resume}
+
+\makelettertitle
+
+I am writing to express my strong enthusiasm for the \textbf{Software Engineering / AI Systems Engineer} role at your company. As a final-year B.Tech student in Computer Science \& Engineering (IoT) graduating in 2027 and winner of the Smart India Hackathon (SIH) 2025, I bring hands-on experience designing production-grade backend systems, automated ingestion pipelines, and rigorous test automation suites.
+
+Throughout my engineering work, I have focused on building measurable, high-availability software architectures:
+\begin{itemize}
+    \item \textbf{AI Backend \& Async Pipelines:} Engineered an end-to-end product ingestion pipeline using FastAPI, Celery, Redis, and MongoDB with structured Gemini outputs, automated deduplication, and rate-limit resilience.
+    \item \textbf{Computer Vision \& Embedded Robotics:} Designed an autonomous 6-DOF pick-and-place robotic arm system with OpenCV color segmentation and visual servoing, slashing memory footprint by 75\% on Raspberry Pi 4B.
+    \item \textbf{Testing \& CI/CD Systems:} Architected AmitAstro with 170+ automated tests across Vitest, Supertest, and Playwright, validating cross-database behavior (SQLite \& PostgreSQL) via GitHub Actions CI service containers.
+\end{itemize}
+
+My core competencies in Python, FastAPI, TypeScript, PostgreSQL, and Distributed Systems directly align with your engineering objectives. I thrive in high-ownership engineering environments and look forward to contributing immediately to your team.
+
+Thank you for your time and consideration. I welcome the opportunity to discuss my qualifications in an interview.
+
+\vspace{10pt}
+\makeletterclosing
+
+\end{document}

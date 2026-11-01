@@ -1,6 +1,8 @@
 import os
 import re
+import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from bot.config import (
     BASE_DIR,
@@ -45,6 +47,20 @@ def generate_tailored_resume(job_id: str, company: str, job_title: str, matched_
     target_tex = out_dir / "resume.tex"
     target_tex.write_text(tex_content, encoding="utf-8")
     
+    # Save companion Reactive Resume JSON document
+    try:
+        master_json_path = BASE_DIR / "resume" / "master_resume.json"
+        if master_json_path.exists():
+            with open(master_json_path, "r", encoding="utf-8") as f:
+                rdata = json.load(f)
+            rdata["basics"]["headline"] = f"{job_title} | Candidate Profile"
+            rdata["targetCompany"] = company
+            rdata["matchedKeywords"] = matched_keywords
+            with open(out_dir / "resume.json", "w", encoding="utf-8") as f:
+                json.dump(rdata, f, indent=2)
+    except Exception as e:
+        print(f"[Resume Generator] JSON export error: {e}")
+
     compiler = str(LUALATEX_PATH)
     cmd = [compiler, "-interaction=nonstopmode", "resume.tex"]
     proc = subprocess.run(cmd, cwd=out_dir, capture_output=True, text=True)
@@ -146,6 +162,22 @@ Thank you for your time and consideration. I welcome the opportunity to discuss 
 
     target_tex = out_dir / "cover_letter.tex"
     target_tex.write_text(cover_tex, encoding="utf-8")
+
+    # Save companion Reactive Resume Cover Letter JSON document
+    try:
+        master_cl_path = BASE_DIR / "resume" / "master_cover_letter.json"
+        if master_cl_path.exists():
+            with open(master_cl_path, "r", encoding="utf-8") as f:
+                cldata = json.load(f)
+            cldata["recipientName"] = recruiter_name or f"{company} Hiring Team"
+            cldata["recipientCompany"] = company
+            cldata["letterDate"] = datetime.now().strftime("%Y-%m-%d")
+            cldata["greeting"] = salutation
+            cldata["recipient"] = f"{recipient_line}\n{recipient_address}"
+            with open(out_dir / "cover_letter.json", "w", encoding="utf-8") as f:
+                json.dump(cldata, f, indent=2)
+    except Exception as e:
+        print(f"[Cover Letter Generator] JSON export error: {e}")
 
     compiler = str(LUALATEX_PATH)
     cmd = [compiler, "-interaction=nonstopmode", "cover_letter.tex"]
