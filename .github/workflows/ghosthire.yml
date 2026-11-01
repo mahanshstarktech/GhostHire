@@ -1,0 +1,55 @@
+name: GhostHire 24/7 Autonomous Job Hunter
+
+on:
+  schedule:
+    # Runs automatically every 2 hours
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Bun Runtime
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install System LaTeX (LuaLaTeX & ModernCV)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-luatex
+
+      - name: Install Python Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Execute GhostHire Agent Pass
+        env:
+          CANDIDATE_NAME: ${{ secrets.CANDIDATE_NAME || 'Mahansh Gaur' }}
+          CANDIDATE_PHONE: ${{ secrets.CANDIDATE_PHONE || '+917073320270' }}
+          CANDIDATE_LINKEDIN: ${{ secrets.CANDIDATE_LINKEDIN || 'https://www.linkedin.com/in/mahansh-gaur-4306751b3/' }}
+          CANDIDATE_GITHUB: ${{ secrets.CANDIDATE_GITHUB || 'https://github.com/mahanshstarktech' }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER || 'mahanshgaur@gmail.com' }}
+          GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python3 bot/runner.py --once
+
+      - name: Persist SQLite Database & Application History
+        if: always()
+        run: |
+          git config --global user.name "GhostHire[bot]"
+          git config --global user.email "bot@ghosthire.internal"
+          git add bot/ghosthire.db applications/ 2>/dev/null || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: persist GhostHire state & application logs [skip ci]" && git push)

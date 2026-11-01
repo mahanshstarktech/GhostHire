@@ -1,0 +1,167 @@
+%% Master CV - Mahansh Gaur
+%% Comprehensive overview of all competencies, experience, projects, and achievements.
+%% Compile with: lualatex main.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+% Style adjustments
+\renewcommand*{\namefont}{\fontsize{26}{28}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\ifpdftex\usepackage[T1]{fontenc}\fi
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Mahansh Gaur - Resume},
+    pdfpagemode=UseNone,
+}}
+\usepackage[scale=0.83]{geometry}
+\usepackage{import}
+
+% Personal data
+\name{Mahansh}{Gaur}
+\address{Jaipur, Rajasthan, India (Open to Relocate / Remote)}{}{}
+\phone[mobile]{+91 70733 20270}
+\email{mahanshgaur@gmail.com}
+\extrainfo{\href{https://linkedin.com/in/mahansh-gaur-4306751b3/}{linkedin.com/in/mahansh-gaur} \,|\, \href{https://github.com/mahanshstarktech}{github.com/mahanshstarktech}}
+
+\begin{document}
+
+\makecvtitle
+\vspace{-16pt}
+
+% ============================================================
+%     PROFESSIONAL SUMMARY
+% ============================================================
+\small{Computer Science (IoT) engineer and 3x national hackathon winner (incl. Smart India Hackathon 2025) specializing in Python backend engineering, AI/LLM pipelines, test automation, and embedded systems. Experienced in building production REST APIs (FastAPI, Node.js, Django), multi-agent and LLM-powered workflows with rigorous output evaluation (Gemini, OpenAI, Whisper), robust test automation (170+ tests across Vitest, Supertest, Playwright with GitHub Actions CI), and robotic computer vision (OpenCV, YOLOv8). Strong fundamentals in Data Structures \& Algorithms, Object-Oriented Programming, and PostgreSQL data pipelines.}
+
+% ============================================================
+%     TECHNICAL SKILLS
+% ============================================================
+\section{Technical Skills}
+\vspace{1pt}
+\begin{itemize}
+\item \textbf{Languages:} Python, TypeScript, JavaScript, SQL, C/C++, HTML/CSS
+\item \textbf{AI / ML \& LLMs:} Gemini API, OpenAI API, Structured LLM Pipelines, LLM-as-Judge Evaluation, Whisper, OpenCV, YOLOv8, scikit-learn, Prompt Engineering
+\item \textbf{Backend \& APIs:} FastAPI, Node.js / Express, Django, REST API Design, WebSockets (Socket.io), Celery, Redis, Auth (RSA-OAEP, CSRF, bcrypt, JWT)
+\item \textbf{Data \& Databases:} PostgreSQL, MongoDB, SQLite, ETL Pipeline Design, Query Optimization, Window Functions, pandas, NumPy
+\item \textbf{Testing \& CI/CD:} Vitest, Supertest, Playwright (E2E), React Testing Library, GitHub Actions (CI/CD Matrices), Docker, Postman
+\item \textbf{IoT \& Hardware:} ESP32, Raspberry Pi 4B, MechArm Pi 270 (6-DOF), LoRa, MQTT, UART, Sensor Telemetry (PZEM-004T, DHT11, NPK, pH)
+\end{itemize}
+
+% ============================================================
+%     EXPERIENCE
+% ============================================================
+\section{Professional Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\item{\cventry{Jun 2025 -- Present}{AI/ML and Data Trainee}{Automatic.lly}{Jaipur, Rajasthan}{}{\vspace{1pt}
+\begin{itemize}
+    \item \textbf{AI Backend Pipeline:} Engineered a production AI product-listing pipeline; scraped supplier URLs into MongoDB, structured outputs via Gemini 3.6 Flash Lite API, generating SEO metadata, tags, HSN codes, and descriptions for Zoho Commerce.
+    \item \textbf{Async Architecture:} Designed FastAPI endpoints with Celery-backed async AI task execution, automated category suggestions, SKU deduplication, rate-limit resilience, and production MongoDB/Redis pooling.
+    \item \textbf{Robotic Computer Vision:} Built autonomous pick-and-place system on MechArm Pi 270 (6-DOF arm) performing 360$^\circ$ scanning and HSV color segmentation to detect and sort objects in a closed loop without hardcoded coordinates.
+    \item \textbf{Embedded Optimization:} Optimized OpenCV pipeline on Raspberry Pi 4B (2\,GB RAM) at 10 FPS (320$\times$240), reducing memory footprint by 75\% using frame-skipping and capped camera buffers.
+    \item \textbf{Visual Servoing:} Implemented proportional servoing loop (30 iterations) correcting yaw (Joint 1) and pitch (Joint 2) from pixel error; eliminated serial race conditions and hardware false readings.
+\end{itemize}}}
+
+\vspace{3pt}
+
+\item{\cventry{Jan 2025 -- Apr 2025}{Web Development Intern}{AuraTech.}{Jaipur, Rajasthan}{}{\vspace{1pt}
+\begin{itemize}
+    \item Delivered Django backend routes, CRUD workflows, and real-time IoT sensor dashboards (DHT11, soil moisture, ultrasonic) integrated with live web interfaces; maintained codebase via Git pull-request review workflows.
+\end{itemize}}}
+
+\vspace{3pt}
+
+\item{\cventry{Dec 2023 -- Jan 2024}{IoT Center of Excellence Intern}{College IoT CoE \& Incubation Cell}{Jaipur, Rajasthan}{}{\vspace{1pt}
+\begin{itemize}
+    \item Architected end-to-end sensor data management pipeline for precision agriculture; calibrated 5 industrial IoT sensor types and engineered real-time telemetry ingestion pipelines into centralized storage.
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     SELECTED PROJECTS
+% ============================================================
+\section{Selected Projects}
+\vspace{3pt}
+\begin{itemize}
+
+\item{\cventry{Client Platform}{AmitAstro: Full-Stack Consultation Platform (Solo-Built)}{React 19, TypeScript, Node.js, PostgreSQL}{Jaipur, India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Built and deployed a 30,000+ line production platform (React 19, Vite, TypeScript, Node.js, Express, PostgreSQL, Socket.io, Gemini API, PWA), directing multi-agent AI workflows and owning architecture and database schema migrations.
+    \item Streamlined client payment verification by building UPI QR + UTR confirmation queue with instant Telegram alerts and one-tap booking unlocks.
+    \item Enforced fraud prevention and security: 1 free call per verified phone, timezone-aware booking engine with session buffers, client-side RSA-OAEP encryption, CSRF tokens, bcrypt hashing, and rate limiting.
+    \item Integrated real-time Socket.io chat, custom telemetry funnel (visits $\to$ signups $\to$ bookings), and Gemini-powered bilingual (English/Hindi) article generator.
+\end{itemize}}}
+
+\vspace{3pt}
+
+\item{\cventry{CI/CD \& Quality}{AmitAstro Test Automation \& AI Evaluation Framework}{Vitest, Playwright, GitHub Actions}{Jaipur, India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Engineered 170+ automated tests across unit, database, REST API, WebSockets, and UI layers, executable in one command in $\sim$20 seconds.
+    \item Configured GitHub Actions matrix with PostgreSQL service containers, validating cross-database behavior (SQLite \& PostgreSQL) and publishing JUnit XML, coverage, and Playwright traces.
+    \item Built security test suite guarding against SQL injection, stored XSS, forged JWTs, and IDOR vulnerabilities; fixed 6 production defects with zero flakiness across 70 repeated runs.
+    \item Designed an AI evaluation harness with a 30-seed adversarial dataset, deterministic schema validators, and an LLM-as-judge rubric (80\% human agreement) gated at 85\% pass rate in CI.
+\end{itemize}}}
+
+\vspace{3pt}
+
+\item{\cventry{IoT \& Data Pipeline}{ARMA: Smart Farming IoT Pipeline \& Analytics Dashboard}{Python, PostgreSQL, Docker, AWS}{Jaipur, India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Built a 5-stage Python ETL pipeline ingesting 4,300+ timestamped records from 7 IoT sensor types into a PostgreSQL star schema; cut query latency by 65\% with bulk inserts and indexing.
+    \item Derived 9 analytical features and 10 advanced SQL queries (window functions, CTEs), identifying thresholds modelling 31\% water savings versus naive scheduled irrigation.
+    \item Deployed OpenCV + YOLOv8 computer vision detecting fruit ripeness 7--10 days in advance; surfaced metrics on an AWS-hosted real-time dashboard containerized with Docker Compose.
+\end{itemize}}}
+
+\vspace{3pt}
+
+\item{\cventry{Full-Stack / Mobile}{Legato: Social Music Streaming App}{Next.js 14, React Native, Zustand, Tailwind}{Jaipur, India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Architected a provider abstraction layer enabling instant zero-downtime switching between Audius API (free streaming, 100M+ tracks) and Spotify Web API via an environment toggle.
+    \item Built fluid glassmorphic UI, custom audio hook for adaptive HTML5 playback, Reels-style music shorts, and social recommendations.
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     ACHIEVEMENTS & HACKATHONS
+% ============================================================
+\section{Honors \& Hackathon Achievements}
+\vspace{1pt}
+\begin{itemize}
+\item \textbf{Winner -- Smart India Hackathon (SIH) 2025} -- Team Lead (Team INNOVENTORS, ID: 70380), Hardware Track (Renewable Energy). Built IoT telemetry pipeline (PZEM-004T + ESP32 + LoRa) and automated phase-balancing algorithm on distribution feeders.
+\item \textbf{Winner -- LNMIT Ideathon 2025} -- 1st Place, The LNM Institute of Information Technology, Jaipur. Presented renewable hosting capacity solution, securing second national-level win.
+\item \textbf{Winner -- GIT Hackathon 2025} -- 1st Place (AI/Data Track), Global Institute of Technology. Built AI call-quality monitoring system with Whisper speech-to-text, Gemini/OpenAI compliance scoring, n8n orchestration, and Streamlit dashboard.
+\end{itemize}
+
+% ============================================================
+%     EDUCATION & CERTIFICATIONS
+% ============================================================
+\section{Education \& Certifications}
+\vspace{1pt}
+\begin{itemize}
+
+\item{\cventry{2023 -- 2027 (Expected)}{B.Tech in Computer Science Engineering (IoT)}{Jaipur, Rajasthan}{}{}{\vspace{1pt}
+\textbf{CGPA:} 8.35 / 10 \quad|\quad \textbf{Relevant Coursework:} Data Structures \& Algorithms, Object-Oriented Programming (OOP), Database Management Systems (SQL), Machine Learning, Statistics \& Probability, Computer Networks, Operating Systems.}}
+
+\vspace{2pt}
+
+\item{\textbf{Google Certification:} Crash Course on Python -- Coursera (2024).}
+
+\vspace{2pt}
+
+\item{\textbf{Languages:} English (Professional Working Proficiency), Hindi (Native / Bilingual).}
+
+\end{itemize}
+
+\end{document}
